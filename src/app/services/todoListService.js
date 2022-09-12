@@ -30,11 +30,16 @@ class todoService {
       return await TodoList.find()
         .exec()
         .then((todoLists) => {
-          let totalPage = this.dataTotalPage(todoLists[0].length, size);
           data = todoLists
+          if (search) {
+            data = data[0].tasks.filter( item =>{
+              return item.task.includes(search);
+            })
+          }
+          let totalPage = this.dataTotalPage(search ? data.length : data[0].tasks.length, size);
           if (page && size) {
-            totalPage = this.dataTotalPage(todoLists[0].length, size);
-            data = this.pagingData(todoLists[0], size, page);
+            totalPage = this.dataTotalPage(search ? data.length : data[0].tasks.length, size);
+            data = this.pagingData(search ? data : todoLists[0].tasks, size, page);
             return { totalPage, data };
           } else {
             return { totalPage, data };
