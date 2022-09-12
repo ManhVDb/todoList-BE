@@ -24,7 +24,7 @@ class todoController {
       page: req.body.page,
       search: req.body.search,
     };
-    await todoListService
+    const { totalPage, data } =  await todoListService
       .getTasks(response.size,response.page,response.search)
       .then(async (data) => {
         responeInstance.success200(

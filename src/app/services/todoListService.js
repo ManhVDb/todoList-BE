@@ -25,13 +25,20 @@ class todoService {
     }
   }
   async getTasks(size, page, search) {
+    let data;
     try {
       return await TodoList.find()
-        .skip(size * page - size)
-        .limit(size)
         .exec()
         .then((todoLists) => {
-          return todoLists;
+          let totalPage = this.dataTotalPage(todoLists[0].length, size);
+          data = todoLists
+          if (page && size) {
+            totalPage = this.dataTotalPage(todoLists[0].length, size);
+            data = this.pagingData(todoLists[0], size, page);
+            return { totalPage, data };
+          } else {
+            return { totalPage, data };
+          }
         });
     } catch (error) {
       throw error;
@@ -75,6 +82,24 @@ class todoService {
       throw error;
     }
   }
+  dataTotalPage(data, size) {
+    if (size == undefined) {
+      return 1;
+    }
+    const totalPage = data / size;
+    if (Number.isInteger(totalPage)) {
+      return totalPage;
+    } else {
+      const result = Math.floor(totalPage);
+      return result + 1;
+    }
+  }
+  pagingData = (data, size, page) => {
+    const pageStart = size * page - size;
+    const pageEnd = pageStart + size;
+    const result = data.slice(pageStart, pageEnd);
+    return result;
+  };
 }
 
 module.exports = new todoService();
