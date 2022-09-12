@@ -4,13 +4,17 @@ class todoService {
   async createTask(nameTask) {
     try {
       const taskNew = new TodoList({
-        tasks: [nameTask],
+        tasks: [
+          {
+            task: nameTask,
+          },
+        ],
       });
       return await TodoList.find()
         .exec()
         .then((todoLists) => {
           if (todoLists[0]?.tasks) {
-            todoLists[0]?.tasks.push(nameTask);
+            todoLists[0]?.tasks.push({ task: nameTask });
             return todoLists[0].save();
           } else {
             return taskNew.save();
@@ -20,7 +24,7 @@ class todoService {
       throw error;
     }
   }
-  async getTasks(size, page) {
+  async getTasks(size, page, search) {
     try {
       return await TodoList.find()
         .skip(size * page - size)
@@ -33,16 +37,19 @@ class todoService {
       throw error;
     }
   }
-  async deleteTask(taskName) {
+  async deleteTask(id) {
     try {
       return await TodoList.find()
         .exec()
         .then((todoLists) => {
           if (todoLists[0]?.tasks && todoLists[0]?.tasks.length > 0) {
-            const index = todoLists[0]?.tasks.indexOf(taskName);
-            if (index > -1) {
-              todoLists[0]?.tasks.splice(index, 1);
-            }
+            todoLists[0]?.tasks.forEach((element, index) => {
+              if (element._id == id) {
+                if (index > -1) {
+                  todoLists[0]?.tasks.splice(index, 1);
+                }
+              }
+            });
             return todoLists[0].save();
           } else {
             throw new Error("No task exists");

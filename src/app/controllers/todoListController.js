@@ -22,9 +22,10 @@ class todoController {
     const response = {
       size: req.body.size,
       page: req.body.page,
+      search: req.body.search,
     };
     await todoListService
-      .getTasks(response.size,response.page)
+      .getTasks(response.size,response.page,response.search)
       .then(async (data) => {
         responeInstance.success200(
           res,
@@ -37,10 +38,10 @@ class todoController {
   }
   async deleteTask(req,res) {
     const response = {
-      task: req.body.task,
+      id: req.body.id,
     };
     await todoListService
-      .deleteTask(response.task)
+      .deleteTask(response.id)
       .then(async (data) => {
         responeInstance.success200(
           res,
