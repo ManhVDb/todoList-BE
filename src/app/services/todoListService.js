@@ -49,6 +49,28 @@ class todoService {
       throw error;
     }
   }
+  async updateTask(task,id) {
+    try {
+      return await TodoList.find()
+        .exec()
+        .then((todoLists) => {
+          if (todoLists[0]?.tasks && todoLists[0]?.tasks.length > 0) {
+            todoLists[0]?.tasks.forEach((element, index) => {
+              if (element._id == id) {
+                if (index > -1) {
+                  element.task = task;
+                }
+              }
+            });
+            return todoLists[0].save();
+          } else {
+            throw new Error("No task exists");
+          }
+        });
+    } catch (error) {
+      
+    }
+  }
   async deleteTask(id) {
     try {
       return await TodoList.find()

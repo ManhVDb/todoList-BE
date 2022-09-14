@@ -18,14 +18,18 @@ class todoController {
         responeInstance.error400(res, jsonInstance.jsonNoData(error.message));
       });
   }
-  async getTasks(req,res) {
+  async getTasks(req, res) {
     const response = {
       size: req.body.size,
       page: req.body.page,
       search: req.body.search,
     };
     try {
-      const { totalPage, data } =  await todoListService.getTasks(response.size,response.page,response.search)
+      const { totalPage, data } = await todoListService.getTasks(
+        response.size,
+        response.page,
+        response.search
+      );
       responeInstance.success200(
         res,
         jsonInstance.toJsonWithData(`GET TASK SUCCCESS!`, data, totalPage)
@@ -34,13 +38,13 @@ class todoController {
       responeInstance.error400(res, jsonInstance.jsonNoData(error.message));
     }
   }
-  async updateTask(req,res) {
+  async updateTask(req, res) {
     const response = {
       task: req.body.task,
-      id: req.body.id
+      id: req.body.id,
     };
     try {
-      const { data } =  await todoListService.updateTask(response.task, response.id)
+      const data = await todoListService.updateTask(response.task, response.id);
       responeInstance.success200(
         res,
         jsonInstance.toJsonWithData(`UPDATE TASK SUCCCESS!`, data)
@@ -49,7 +53,7 @@ class todoController {
       responeInstance.error400(res, jsonInstance.jsonNoData(error.message));
     }
   }
-  async deleteTask(req,res) {
+  async deleteTask(req, res) {
     const response = {
       id: req.body.id,
     };
@@ -65,7 +69,7 @@ class todoController {
         responeInstance.error400(res, jsonInstance.jsonNoData(error.message));
       });
   }
-  async deleteAllTasks(req,res) {
+  async deleteAllTasks(req, res) {
     await todoListService
       .deleteAllTasks()
       .then(async (data) => {
