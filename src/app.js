@@ -26,6 +26,7 @@ app.use((req, res, next) => {
   }
   next();
 });
+// start server
 routerRoot(app);
 let port = process.env.PORT || 2408;
 app.listen(port, () => {
